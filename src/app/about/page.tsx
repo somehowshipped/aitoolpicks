@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About CursorTips",
+  title: "About AI Tool Picks",
   description:
-    "Learn who writes CursorTips and how affiliate links are handled.",
+    "Learn who writes AI Tool Picks and how affiliate links are handled.",
 };
 
 export default function AboutPage() {
@@ -14,11 +14,12 @@ export default function AboutPage() {
           About
         </p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
-          About CursorTips
+          About AI Tool Picks
         </h1>
         <p className="mt-6 text-lg leading-8 text-zinc-300">
-          CursorTips is written by a 19-year-old solo builder who uses Cursor AI
-          daily to ship software. Every guide is based on real experience.
+          AI Tool Picks is written by a 19-year-old solo builder who uses
+          Cursor AI daily to ship software. Every guide is based on real
+          experience.
         </p>
 
         <section className="mt-12 rounded-2xl border border-white/10 bg-[#111111] p-6">

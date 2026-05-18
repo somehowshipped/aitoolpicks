@@ -14,7 +14,7 @@ export function Header() {
           href="/"
           className="text-lg font-bold tracking-tight text-[#f5f5f5]"
         >
-          CursorTips
+          AI Tool Picks
         </Link>
 
         <nav className="flex items-center gap-6 text-sm text-zinc-300">

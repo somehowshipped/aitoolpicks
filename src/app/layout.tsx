@@ -16,22 +16,22 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "CursorTips – Cursor AI Guides & AI Tool Reviews",
-    template: "%s | CursorTips",
+    default: "AI Tool Picks – Cursor AI Guides & AI Tool Reviews",
+    template: "%s | AI Tool Picks",
   },
   description:
     "Practical guides for building SaaS products with Cursor AI. Compare the best AI coding tools and ship faster.",
-  metadataBase: new URL("https://cursortips.dev"),
+  metadataBase: new URL("https://aitoolpicks.dev"),
   openGraph: {
-    title: "CursorTips",
+    title: "AI Tool Picks",
     description: "Practical Cursor AI guides for solo builders.",
-    url: "https://cursortips.dev",
-    siteName: "CursorTips",
+    url: "https://aitoolpicks.dev",
+    siteName: "AI Tool Picks",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "CursorTips",
+    title: "AI Tool Picks",
     description: "Practical Cursor AI guides for solo builders.",
   },
 };

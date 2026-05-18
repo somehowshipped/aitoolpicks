@@ -63,14 +63,15 @@ export default function Home() {
       <section id="about" className="border-t border-white/10 px-6 py-20">
         <div className="mx-auto max-w-6xl rounded-3xl bg-[#111111] p-8 sm:p-10">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#6366f1]">
-            About CursorTips
+            About AI Tool Picks
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight">
             Practical AI coding advice without the hype.
           </h2>
           <p className="mt-4 max-w-3xl leading-7 text-zinc-300">
-            CursorTips publishes concise guides for developers, founders, and
-            solo builders who want to use AI coding tools to ship real products.
+            AI Tool Picks publishes concise guides for developers, founders,
+            and solo builders who want to use AI coding tools to ship real
+            products.
           </p>
         </div>
       </section>
