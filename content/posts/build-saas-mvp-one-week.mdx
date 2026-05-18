@@ -1,0 +1,194 @@
+---
+title: "How to Build a SaaS MVP in One Week with Cursor AI"
+description: "A realistic week-by-week breakdown of shipping a minimum viable SaaS product using Cursor AI, Next.js, Supabase, and Stripe."
+date: "2026-05-19"
+tags: ["saas", "cursor", "tutorial", "indie-hacker"]
+---
+
+A one-week SaaS MVP is possible, but only if the scope is small. I do not mean a full platform with team accounts, analytics, billing edge cases, onboarding emails, admin tools, and a perfect design system.
+
+I mean one useful workflow that a real person can try. Cursor AI helps with speed, but the real trick is cutting the product down until one week is enough.
+
+## What "MVP" Actually Means (and what it doesn't)
+
+An MVP is not the smallest version of your dream product. It is the smallest version that tests whether anyone cares. That difference matters because most builders cut the wrong things.
+
+I do not cut the core value. If the app promises to help newsletter writers find their best posts, the MVP still needs to show a useful result. I cut everything around it: teams, advanced exports, custom themes, admin dashboards, complex settings, and anything that does not prove the main use case.
+
+For a one-week build, I define the MVP in one sentence. "A user can sign up, connect or enter data, see one useful result, and pay to keep using it." That is enough shape to build.
+
+What it does not mean: a broken prototype, a landing page with no product, or a fake dashboard. If I am asking users for feedback, I want them to experience the real workflow. It can be narrow, but it should be honest.
+
+Cursor AI is useful because it can move fast through repeated product patterns. It can help build forms, route shells, database helpers, empty states, and billing pages. But it will also happily help you overbuild if you ask for too much.
+
+My rule is simple: if a feature does not help a user reach the first useful outcome, it does not go into the one-week MVP.
+
+## The Stack I Use Every Time
+
+For a fast SaaS MVP, I use Next.js, Supabase, Stripe, and Vercel. I use this stack because it covers the basics without making me design infrastructure from scratch.
+
+Next.js gives me the app, marketing pages, API routes, metadata, and deployment path. Supabase gives me Postgres, authentication, and a quick way to inspect data. Stripe gives me checkout and billing. Vercel gives me hosting that works well with Next.js.
+
+The important part is not that this stack is trendy. The important part is that I know what each tool is responsible for. Next.js handles the product UI. Supabase handles users and data. Stripe handles money. Vercel handles deployment.
+
+Cursor works well with this setup because the patterns are common. If I ask it to add a protected route, it can usually reason about the shape. If I ask it to create a billing status card, it has a clear place to work.
+
+I still keep the architecture simple:
+
+```txt
+src/app          -> routes and pages
+src/components   -> shared UI
+src/lib          -> Supabase, Stripe, and server helpers
+content/posts    -> SEO content if the app has a blog
+```
+
+I do not add queues, background workers, admin panels, or a complex monorepo on day one. If the MVP needs them to work at all, I probably picked the wrong MVP.
+
+## Day 1: Define the product in one sentence
+
+Day 1 is not for coding. Day 1 is for deciding what I am building. If I skip this, Cursor makes me faster at building the wrong thing.
+
+I write a one-sentence product definition:
+
+```txt
+This product helps [specific user] do [specific job] so they can get [specific outcome].
+```
+
+For example: "This product helps solo newsletter writers identify which posts drive the most paid subscribers so they can write more of what works." That sentence tells me what the app must do.
+
+Then I write the first workflow. It should fit on a short list:
+
+- User signs up.
+- User creates a workspace.
+- User adds or imports newsletter data.
+- User sees one useful dashboard.
+- User upgrades to keep using the product.
+
+That is the MVP. Everything else is a later problem.
+
+This is where I ask Cursor for help, but not for code yet. My prompt is: "Read this product definition and turn it into the smallest build plan for a one-week SaaS MVP. List what to build and what to skip. Do not write code."
+
+I want Cursor to challenge the scope. If it suggests too much, I ask it to cut the plan in half. The goal on Day 1 is a build plan that feels almost too small.
+
+## Day 2-3: Build auth and database
+
+On Days 2 and 3, I build the boring foundation: authentication, database tables, and basic protected routes. This is not glamorous, but it decides whether the rest of the week feels stable or painful.
+
+With Supabase, I usually start with users, profiles, and the first core table. For a newsletter analytics MVP, that might be `workspaces`, `posts`, and `metrics`. I do not model every future relationship. I model only what the first workflow needs.
+
+I ask Cursor to help draft the schema, but I review it carefully. Database mistakes are expensive to unwind later. I want simple names, clear ownership, and timestamps where they matter.
+
+A useful prompt is:
+
+```txt
+Given this MVP workflow, propose the smallest Supabase schema.
+Include table names, columns, and relationships.
+Do not write migrations yet.
+```
+
+After the schema looks right, I build auth pages and a protected dashboard shell. I want a user to sign up, land in the app, and see an empty state. Even if the feature is not done, the product should have a real skeleton.
+
+Cursor can help wire the route structure quickly. I ask it to follow the existing project style and avoid adding new libraries unless needed. Then I run the app and test signup manually.
+
+By the end of Day 3, I want auth working, the database shaped, and the dashboard route loading for a real user. If that is not done, I do not move to payments yet.
+
+## Day 4-5: Build the core feature
+
+Days 4 and 5 are for the thing users actually care about. This is not the time to polish the footer or redesign the pricing page. I build the core feature until it produces one useful result.
+
+For a newsletter analytics MVP, the core feature might be a form that lets users enter post data and a dashboard that ranks posts by paid conversions. It does not need every chart. It needs one view that makes the user say, "I can use this."
+
+I break the feature into small prompts. First the data input. Then validation. Then saving to Supabase. Then the dashboard query. Then empty/loading/error states. Then the small UI polish pass.
+
+Cursor is strongest when I keep each prompt narrow:
+
+```txt
+Add a form for creating a newsletter post metric.
+Use the existing form styling.
+Fields: title, publish date, views, clicks, paid conversions.
+Do not add charts yet.
+```
+
+After each edit, I test the flow in the browser. Can I add data? Does it save? Does the dashboard update? What happens with no data? What happens with invalid numbers?
+
+I do not wait until the end to test. Short feedback loops keep the project from drifting. If Cursor creates a bug, I catch it while the diff is still small.
+
+By the end of Day 5, the user should be able to complete the core workflow. It may be plain, but it should work.
+
+## Day 6: Add Stripe payments
+
+Day 6 is for payment, not payment perfection. I add one paid plan, one checkout flow, and one billing portal link. I do not build coupons, trials, team billing, invoices pages, or complex plan tiers unless the MVP truly needs them.
+
+Stripe should have clear boundaries in the code. I usually want a checkout route, a webhook route, and a helper that checks whether the current user has access. I do not want subscription logic scattered across random components.
+
+My Cursor prompt is direct:
+
+```txt
+Plan the smallest Stripe subscription integration for this app.
+Use one paid plan.
+Include checkout, webhook handling, and access checks.
+List files first. Do not edit yet.
+```
+
+I review the plan before letting Cursor edit. Webhooks need special care because signature verification matters. I also check environment variable names and make sure secrets are not hardcoded.
+
+After implementation, I test the happy path. Start checkout, complete payment in test mode, return to the app, and confirm the paid feature unlocks. Then I test the unpaid state. A user who has not paid should see a clear upgrade prompt.
+
+For an MVP, the billing UI can be simple. A button to upgrade and a button to manage billing are enough. The important part is that access matches subscription state.
+
+If payments take more than a day, I reduce scope. The point is not to build a billing platform. The point is to learn whether someone will pay for the core product.
+
+## Day 7: Deploy and get first users
+
+Day 7 is deployment and outreach. I deploy to Vercel, test the production URL, and ask a few people to try the product. This is the day where the MVP stops being a private coding exercise.
+
+My pre-deploy checklist is short:
+
+- Environment variables are set in Vercel.
+- Supabase production project is connected.
+- Stripe webhook endpoint points to production.
+- Auth redirects use the production domain.
+- The core workflow works in a fresh browser session.
+- The pricing and upgrade path are visible.
+
+Cursor can help with the checklist, but I run it myself. Production bugs often come from configuration, not code. A build passing locally does not mean webhooks, redirects, and environment variables are correct.
+
+For first users, I do not write a huge launch post. I message people who match the target user and ask for a specific test. "Can you try this dashboard and tell me if the ranking is useful?" works better than "What do you think of my startup?"
+
+I also add basic analytics or event logging if it is already easy. I want to know whether people sign up, reach the core feature, and hit the upgrade screen. I do not need a complex analytics stack for the first week.
+
+By the end of Day 7, success is not revenue at scale. Success is having a real product link, a working payment path, and feedback from actual users.
+
+## What to Skip Completely
+
+Skip team accounts. They add permissions, invites, billing questions, and edge cases. Unless the MVP is specifically about teams, single-user accounts are enough.
+
+Skip advanced settings. Most settings pages are a place to hide uncertainty. If the first version needs ten settings to be useful, the product idea may not be focused enough.
+
+Skip custom design systems. Use a small set of reusable components and move on. A consistent simple UI beats a half-finished design system.
+
+Skip complex onboarding tours. A good empty state and one clear next action are usually enough. If the product needs a long tour to explain itself, the workflow may be too confusing.
+
+Skip multiple pricing tiers. One plan is easier to explain and easier to build. You can add tiers after you know what users value.
+
+Skip admin dashboards. Use Supabase, Stripe, and logs directly in the beginning. Build internal tools only when manual work becomes a real bottleneck.
+
+Skip premature automation. If you can do something manually for the first ten users, do it manually. Your job in week one is learning, not removing every manual step.
+
+This is hard because Cursor makes building feel cheap. But every feature still has maintenance cost. The fastest MVP is the one that refuses most features.
+
+## Realistic Expectations
+
+A one-week SaaS MVP will not feel like a polished company. It should feel like a focused tool that does one job clearly. That is enough.
+
+Do not expect perfect code. Expect code you can understand and improve. I would rather ship simple code with a few rough edges than spend the week building abstractions for a product nobody has used.
+
+Do not expect users to behave exactly how you imagined. The first users will click the wrong thing, ask for a different feature, or misunderstand the value. That feedback is the point.
+
+Do not expect Cursor to replace review. It can write a lot of useful code, but you still own the product. Review diffs, test flows, and keep commits small enough to revert.
+
+The realistic goal is this: after one week, a user can sign up, use the core feature, and understand why they might pay. If you reach that point, the MVP worked.
+
+After that, the next week is not about adding every feature. It is about watching users, fixing the biggest confusion, and improving the one workflow that matters most.
+
+That is how I would build a SaaS MVP with Cursor AI. Small scope, boring tools, short prompts, constant testing, and real users as early as possible.

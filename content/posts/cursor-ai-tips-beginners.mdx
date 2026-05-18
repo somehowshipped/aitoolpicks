@@ -1,0 +1,194 @@
+---
+title: "10 Cursor AI Tips I Wish I Knew as a Beginner"
+description: "Practical Cursor AI tips that actually save time. These are the things I learned after months of daily use that nobody tells you upfront."
+date: "2026-05-19"
+tags: ["cursor", "tips", "beginner"]
+---
+
+When I first started using Cursor AI, I treated it like a smarter autocomplete. That was useful, but I was missing most of the value.
+
+Cursor works best when I give it context, constraints, and small tasks. These are the practical habits I wish I had built from day one.
+
+## 1. Use Cmd+K for quick edits, Cmd+L for conversations
+
+The first shortcut I wish I learned earlier is the difference between quick edits and conversations. I use Cmd+K when I know exactly what I want changed in a selected block of code. I use Cmd+L when I need to talk through a problem.
+
+Cmd+K is good for small, local edits. Rename this variable. Simplify this conditional. Add error handling to this function. Change this copy to be shorter.
+
+Cmd+L is better when the problem needs context. If I am trying to understand why a route fails, where a helper is used, or how to structure a feature, I start a conversation. I want Cursor to reason before editing.
+
+The mistake I made early was using chat for everything. That slowed me down. If the edit is obvious and local, Cmd+K is faster.
+
+The opposite mistake is using Cmd+K when I do not understand the problem. That creates random edits. If I cannot explain the change in one sentence, I use chat first.
+
+## 2. Give Cursor context before asking anything
+
+Cursor is much better when it knows what it is looking at. A vague prompt like "fix this" often produces a vague answer. A prompt with context produces something I can actually review.
+
+Before asking for edits, I often ask Cursor to inspect files:
+
+```txt
+Read the dashboard route, the data helper, and the ProjectCard component.
+Explain how data flows through this page.
+Do not edit files yet.
+```
+
+That prompt does two things. It gives Cursor a clear scope, and it forces a non-editing step first. I get a map before I ask for changes.
+
+Context is especially important in larger projects. If there are existing patterns, I want Cursor to follow them. If I do not point Cursor at those patterns, it may invent new ones.
+
+My rule is simple: if I would explain something to a human pair programmer, I explain it to Cursor too.
+
+## 3. Always review the diff before accepting
+
+This is the habit that saves me the most pain. Cursor can make correct-looking changes that still do the wrong thing. I never accept a meaningful diff without reading it.
+
+When I review a diff, I look for unrelated edits first. Did it touch files I did not ask it to touch? Did it change formatting across a whole file? Did it add a dependency for no clear reason?
+
+Then I check the logic. I look for missing error states, duplicated helpers, weak names, and changes that hide product logic in the wrong place. I also check whether the new code matches the style of nearby code.
+
+If I do not understand a change, I ask Cursor to explain it before I keep it:
+
+```txt
+Explain why this helper is needed.
+Could this be simpler?
+What existing pattern in the repo does it follow?
+```
+
+AI coding is fastest when the diffs stay reviewable. If a diff is too large to review, I usually reject it and ask for a smaller implementation.
+
+## 4. Use @ to reference specific files
+
+Referencing files directly is one of the easiest ways to improve Cursor output. Instead of hoping it finds the right context, I point it at the files I care about.
+
+For example, I might write:
+
+```txt
+Use @src/app/blog/page.tsx and @src/lib/posts.ts as the pattern.
+Add the same metadata style to the new page.
+Do not change the post loader.
+```
+
+That is much better than "make this match the blog." Specific file references reduce guessing. They also make it clearer which files should not be changed.
+
+I use file references for patterns, not just problems. If I like how one page handles layout, I reference it. If one helper has the right style, I reference it. Cursor is better at copying a real local pattern than interpreting a vague style request.
+
+This is especially useful when a project has more than one way to do something. If there are old components and new components, I point Cursor at the new ones.
+
+## 5. Write .cursorrules before starting any project
+
+I used to skip rules files because they felt like setup work. That was a mistake. A short `.cursorrules` file saves repeated prompting and keeps Cursor closer to the project style.
+
+My rules files are not long. I include the stack, folder structure, coding preferences, files not to touch, and verification commands.
+
+Here is a small example:
+
+```txt
+Project rules:
+- This is a Next.js App Router project using TypeScript and Tailwind CSS.
+- Routes live in src/app.
+- Components live in src/components.
+- Prefer Server Components unless interactivity requires a Client Component.
+- Do not add dependencies without asking.
+- Do not edit .env files.
+- Run npm run lint after meaningful code changes.
+```
+
+That is enough to help. Cursor now knows what kind of project it is in and what mistakes to avoid.
+
+The key is keeping the rules specific. "Write clean code" does not help much. "Do not create a second API client; use `src/lib/api.ts`" helps a lot.
+
+## 6. Ask Cursor to explain code, not just write it
+
+One of the best uses of Cursor is explanation. When I join an old project or return to code I forgot, I ask Cursor to explain the flow before I edit anything.
+
+I use prompts like:
+
+```txt
+Explain how this route works from request to rendered page.
+Mention which files are involved.
+Do not suggest changes yet.
+```
+
+This helps me avoid editing the wrong layer. Sometimes the bug is not in the component I was staring at. Sometimes it is in a helper, a server action, or a missing prop from a parent.
+
+Explanations also make me a better reviewer. If Cursor writes code I do not understand, that is a warning sign. I either ask it to simplify the code or explain why the complexity is needed.
+
+Beginners often use Cursor to avoid learning. I think that is backwards. Cursor is more useful when I use it to learn the codebase faster.
+
+## 7. Break big tasks into small steps
+
+Big prompts create big diffs. Big diffs are hard to review. That is where beginners get into trouble.
+
+Instead of saying, "Build the entire dashboard," I split the work:
+
+- Create the route shell.
+- Add the empty state.
+- Add the data query.
+- Render the first list.
+- Add loading and error states.
+- Polish the copy.
+
+Each step is small enough to review. If one step goes wrong, I can fix it without untangling a huge change.
+
+I often ask Cursor to make the plan first:
+
+```txt
+Plan the smallest implementation for this feature.
+List the steps and files.
+Do not edit yet.
+```
+
+Then I approve one step at a time. This feels slower at first, but it is faster than cleaning up a messy generated feature.
+
+## 8. Use "do not change X" in your prompts
+
+Negative instructions are underrated. Cursor is helpful, but it can be too helpful. If I know something should not change, I say it clearly.
+
+Examples:
+
+```txt
+Do not change the database schema.
+Do not edit shared components.
+Do not add dependencies.
+Do not rename routes.
+Do not change the public API.
+```
+
+These instructions are not perfect, but they reduce unwanted edits. They also help me review the result. If Cursor changes something I said not to change, I know to reject or question the diff.
+
+I use this a lot around auth, payments, and migrations. Those areas have hidden costs. A small-looking change can break a real user flow.
+
+The more important the boundary, the more explicit I am. I do not assume Cursor knows what is risky in my project.
+
+## 9. Commit often so you can revert
+
+Cursor makes it easy to move quickly, which means it also makes it easy to get lost. Git is the safety net. I commit before large changes and after each working slice.
+
+My pattern is simple. Get the app working. Commit. Ask Cursor for the next small change. Review. Test. Commit again.
+
+This is not about perfect commit history. It is about having a known-good point to return to. If Cursor takes the code in the wrong direction, I do not want to manually undo twenty small edits.
+
+I also use branches for experiments. If I want Cursor to try a bigger refactor, I do it away from the main working state. That gives me permission to reject the whole attempt.
+
+The more I use AI coding tools, the more I value boring Git habits. Fast tools need simple guardrails.
+
+## 10. Cursor is a pair programmer, not an autopilot
+
+This is the mindset shift that made Cursor useful for me. I do not treat it like an autopilot. I treat it like a fast pair programmer that needs direction.
+
+That means I bring the goal, constraints, and judgment. Cursor helps with implementation, explanation, and cleanup. I still decide what the product should do.
+
+When I forget this, the code gets worse. I ask for too much, accept too quickly, and end up with features that look complete but feel off. When I stay involved, Cursor saves time without taking control away from me.
+
+The best sessions feel collaborative. I ask for a plan. Cursor proposes one. I cut scope. Cursor edits. I review. We repeat.
+
+That loop is not flashy, but it works. It helps me ship while still understanding the code I am shipping.
+
+## Final Thought
+
+Cursor AI is most useful when you slow down enough to use it well. Give it context, reference files, keep prompts small, and review the diff.
+
+If you are a beginner, do not start by asking Cursor to build a full app. Start by asking it to explain a file, make one small edit, or help you write a rule file. Build trust with small tasks.
+
+The goal is not to let Cursor write everything. The goal is to become a faster developer who still understands the product. That is the version of AI-assisted coding that has actually helped me.
