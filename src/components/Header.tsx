@@ -8,21 +8,21 @@ const navItems = [
 
 export function Header() {
   return (
-    <header className="border-b border-white/10 bg-[#0a0a0a]/90 backdrop-blur">
+    <header className="border-b border-[#e5e7eb] bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <Link
           href="/"
-          className="text-lg font-bold tracking-tight text-[#f5f5f5]"
+          className="text-lg font-semibold tracking-tight text-[#111111]"
         >
           AI Tool Picks
         </Link>
 
-        <nav className="flex items-center gap-6 text-sm text-zinc-300">
+        <nav className="flex items-center gap-6 text-sm text-[#6b7280]">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="transition hover:text-[#6366f1]"
+              className="transition hover:text-[#111111]"
             >
               {item.label}
             </Link>

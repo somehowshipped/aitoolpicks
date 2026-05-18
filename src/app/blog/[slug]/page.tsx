@@ -57,15 +57,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   });
 
   return (
-    <article className="bg-[#0a0a0a] px-6 py-20 text-[#f5f5f5]">
-      <div className="mx-auto max-w-3xl">
-        <p className="text-sm text-zinc-500">
+    <article className="bg-white px-6 py-14 text-[#111111] sm:py-16">
+      <div className="mx-auto max-w-[680px]">
+        <p className="text-sm text-[#6b7280]">
           {post.date} · {post.readingTime}
         </p>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
           {post.title}
         </h1>
-        <div className="mt-10 space-y-6 text-lg leading-8 text-zinc-300 [&_a]:text-[#6366f1] [&_h2]:pt-6 [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:text-[#f5f5f5] [&_h3]:pt-4 [&_h3]:text-2xl [&_h3]:font-semibold [&_h3]:text-[#f5f5f5] [&_li]:ml-6 [&_li]:list-disc [&_strong]:text-white">
+        <div className="mt-10 space-y-6 text-[18px] leading-8 text-[#111111] [&_a]:font-medium [&_a]:text-[#6366f1] [&_h2]:mt-14 [&_h2]:border-t [&_h2]:border-[#e5e7eb] [&_h2]:pt-10 [&_h2]:text-3xl [&_h2]:font-semibold [&_h2]:leading-tight [&_h2]:tracking-tight [&_h2]:text-[#111111] [&_h3]:mt-10 [&_h3]:text-2xl [&_h3]:font-semibold [&_h3]:leading-tight [&_h3]:text-[#111111] [&_li]:ml-6 [&_li]:list-disc [&_strong]:font-semibold [&_strong]:text-[#111111] [&_table]:my-8 [&_table]:w-full [&_table]:border-collapse [&_td]:border [&_td]:border-[#e5e7eb] [&_td]:p-3 [&_td]:text-sm [&_th]:border [&_th]:border-[#e5e7eb] [&_th]:bg-[#f9fafb] [&_th]:p-3 [&_th]:text-left [&_th]:text-sm [&_th]:font-semibold">
           {content}
         </div>
       </div>
