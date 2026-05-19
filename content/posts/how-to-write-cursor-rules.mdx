@@ -1,19 +1,44 @@
 ---
-title: "How to Write Cursor Rules That Actually Work"
-description: "Most .cursorrules files are copy-pasted garbage. Here's how to write rules that make Cursor actually useful for your specific project."
+title: "How to Write Cursor Rules That Actually Work (.cursor/rules/ MDC Format, 2026)"
+description: "Most .cursorrules files are copy-pasted garbage — and the format is now deprecated. Here's how to write .cursor/rules/ MDC files that actually guide Cursor in Agent mode."
 date: "2026-05-19"
-tags: ["cursor", "tutorial", "productivity"]
+tags: ["cursor", "tutorial", "productivity", "cursor-rules"]
 ---
+
+I pay for Cursor Pro+ at $60/month out of my own pocket — nobody sponsored this review.
 
 Most `.cursorrules` files I see are too generic to help. They say things like "write clean code" or "follow best practices," which sounds fine but gives Cursor almost nothing specific to follow.
 
 A useful rules file should describe how this project works. It should tell Cursor what stack you use, where important files live, what patterns to copy, and what mistakes to avoid.
 
+## The 2026 Update: Why .cursorrules Stops Working in Agent Mode
+
+Cursor officially deprecated the single `.cursorrules` file format. The new standard is a `.cursor/rules/` directory with separate `.mdc` rule files.
+
+The important part is not the file extension. The important part is Agent mode. Cursor's docs and independent testing show that `.cursorrules` is silently ignored when you use Agent mode.
+
+That means if you use Composer or Agent at all, your old `.cursorrules` file is giving those sessions zero guidance. Chat may still pick it up, and Composer may still load it, but Agent mode is where the old format breaks down.
+
+My honest advice: migrate now. If your rules matter, move them into `.cursor/rules/*.mdc` and delete the old file so you do not think you are protected when you are not.
+
 ## What Are Cursor Rules?
 
-Cursor rules are project instructions that guide how Cursor answers questions and edits code. In older setups, many people used a `.cursorrules` file in the project root. In newer Cursor workflows, rules can also live in `.cursor/rules/`, but the idea is the same: give the assistant local context it should always remember.
+Cursor rules are project instructions that guide how Cursor answers questions and edits code. In 2026, project rules should live in `.cursor/rules/` as Markdown files, usually `.mdc`, with optional YAML frontmatter.
 
 I think of rules as the short onboarding note I would give to a new developer. If someone joined my project for one day, what would they need to know before touching files? That is what belongs in the rules.
+
+The useful frontmatter fields are `description`, `globs`, and `alwaysApply`. Those fields decide when a rule is active and whether Cursor can request it during a task.
+
+There are four activation modes I care about:
+
+- Always Apply: `alwaysApply: true`
+- Auto Attached: matched by `globs`
+- Agent Requested: selected by the rule `description`
+- Manual: referenced directly with `@rule-name`
+
+The legacy `.cursorrules` file still loads in Chat and Composer, but not in Agent mode. If you use Agent mode, `.cursor/rules/` is the format that matters.
+
+`AGENTS.md` at the project root is a simpler fallback format Cursor also reads. I still prefer `.cursor/rules/*.mdc` for real projects because I can split rules by topic and attach them to specific files.
 
 Rules are not magic. They will not make Cursor understand a messy codebase perfectly. But they can reduce repeated explanations. Instead of telling Cursor every time that this is a Next.js App Router project using Tailwind and MDX, I write it once.
 
@@ -47,20 +72,29 @@ The fifth rule should define verification. I tell Cursor which commands matter. 
 
 Here is the pattern I use:
 
-```txt
-Project context:
+```md
+.cursor/rules/01-project-core.mdc
+---
+description: Core project context — always applied
+alwaysApply: true
+---
+
+# Project Context
+
 - This is a Next.js App Router project using TypeScript and Tailwind CSS.
 - Routes live in src/app.
 - Shared components live in src/components.
 - Blog content lives in content/posts as MDX.
 
-Implementation rules:
+# Implementation Rules
+
 - Prefer Server Components unless interactivity requires a Client Component.
 - Reuse existing components and styling patterns before creating new ones.
 - Do not add dependencies without explaining why.
 - Do not edit generated files or environment files unless explicitly asked.
 
-Verification:
+# Verification
+
 - After meaningful code changes, run npm run lint.
 - Run npm run build when routes, metadata, or MDX rendering changes.
 ```
@@ -93,8 +127,15 @@ Formatting rules help. If the project uses `ruff`, `black`, `mypy`, or `pytest`,
 
 Here is a small Python rule set I would actually use:
 
-```txt
-Python project rules:
+```md
+.cursor/rules/02-python-api.mdc
+---
+description: Python API conventions for services and tests
+globs: ["**/*.py"]
+---
+
+# Python Project Rules
+
 - Use Python 3.12 syntax.
 - Prefer typed functions for public helpers.
 - Keep FastAPI route handlers thin; put business logic in services.
@@ -105,59 +146,89 @@ Python project rules:
 
 Again, the goal is not to list every Python opinion. The goal is to preserve the local shape of the project.
 
-## Example: My Personal .cursorrules File
+## Example: My .cursor/rules/ Setup
 
-This is the kind of `.cursorrules` file I would start with for a small Next.js blog or SaaS project. I would edit it after the first few real features.
+This is the kind of `.cursor/rules/` setup I would start with for a small Next.js blog or SaaS project. I would edit it after the first few real features.
 
-```txt
-You are helping maintain a small solo-developer Next.js project.
+```md
+.cursor/rules/01-core.mdc
+---
+description: Core project context and safety rules
+alwaysApply: true
+---
 
-Project stack:
+# Stack
+
 - Next.js App Router with TypeScript.
 - Tailwind CSS for styling.
-- Content posts are MDX files in content/posts.
 - Shared React components live in src/components.
 - App routes live in src/app.
 
-Coding style:
+# Safety Rules
+
 - Prefer simple, readable code over clever abstractions.
 - Reuse existing components, utilities, and route patterns before adding new ones.
-- Keep components server-side by default.
-- Add "use client" only when browser state, event handlers, or browser APIs require it.
 - Do not add a dependency unless the task clearly needs it.
-
-Content rules:
-- MDX posts must include title, description, date, and tags in frontmatter.
-- Dates should use YYYY-MM-DD.
-- Keep writing direct, first-person, and practical.
-
-Safety rules:
 - Do not edit .env files.
 - Do not edit generated files.
 - Do not rename routes without asking.
-- Before changing shared components, check where they are imported.
 
-Verification:
+# Verification
+
 - Run npm run lint after code changes.
 - Run npm run build after route, metadata, or MDX changes.
 ```
 
-The important part is that this file is specific. It mentions the stack, file locations, content rules, safety rules, and verification commands. Cursor has enough direction to behave better.
+```md
+.cursor/rules/02-content.mdc
+---
+description: MDX content rules for blog posts
+globs: ["content/**/*.mdx"]
+---
 
-I would not copy this file exactly into every project. I would change it for the actual stack. If the project uses Prisma, I would mention Prisma. If it uses Supabase, I would mention Supabase. If it has a custom design system, I would name it.
+# Content Rules
+
+- MDX posts must include title, description, date, and tags in frontmatter.
+- Dates should use YYYY-MM-DD.
+- Keep writing direct, first-person, and practical.
+- Do not make claims about tools I have not used without research-based wording.
+```
+
+```md
+.cursor/rules/03-components.mdc
+---
+description: React component conventions
+globs: ["src/components/**"]
+---
+
+# Component Rules
+
+- Prefer Server Components unless browser state, event handlers, or browser APIs require a Client Component.
+- Reuse existing components and styling patterns before creating new ones.
+- Before changing shared components, check where they are imported.
+- Keep props simple and typed.
+```
+
+The important part is that these files are specific. They mention the stack, file locations, content rules, safety rules, and verification commands. Cursor has enough direction to behave better, and Agent mode can actually see the relevant rules.
+
+I would not copy this setup exactly into every project. I would change it for the actual stack. If the project uses Prisma, I would mention Prisma. If it uses Supabase, I would mention Supabase. If it has a custom design system, I would name it.
 
 ## Common Mistakes to Avoid
 
-The first mistake is writing rules for an imaginary perfect project. Rules should describe the repo you have, not the repo you wish you had. If your project has a simple structure, do not invent a complex architecture in the rules file.
+The first mistake is keeping a `.cursorrules` file when you use Agent mode. If you have ever clicked into Agent mode, your old `.cursorrules` file is not loading. The fix is to move your rules into `.cursor/rules/*.mdc` and delete the old file.
 
-The second mistake is adding too many style opinions. Cursor does not need a full essay about clean code. It needs the few constraints that change the output. Keep the rules short enough to stay useful.
+Another mistake is writing rules for an imaginary perfect project. Rules should describe the repo you have, not the repo you wish you had. If your project has a simple structure, do not invent a complex architecture in the rules file.
 
-The third mistake is using rules to avoid reviewing diffs. Rules help Cursor start closer to the right answer, but they do not remove your responsibility. I still check every diff, especially when shared components, auth, billing, or database code changes.
+Another mistake is adding too many style opinions. Cursor does not need a full essay about clean code. It needs the few constraints that change the output. Keep the rules short enough to stay useful.
 
-The fourth mistake is forgetting negative instructions. If there are files Cursor should not touch, say so. If there are patterns you do not want, say so. "Do not create a second API client" can save a lot of cleanup.
+Another mistake is using rules to avoid reviewing diffs. Rules help Cursor start closer to the right answer, but they do not remove your responsibility. I still check every diff, especially when shared components, auth, billing, or database code changes.
 
-The fifth mistake is never revisiting the file. I update rules when I notice repeated friction. If I keep telling Cursor the same thing in prompts, that instruction probably belongs in the rules.
+Another mistake is forgetting negative instructions. If there are files Cursor should not touch, say so. If there are patterns you do not want, say so. "Do not create a second API client" can save a lot of cleanup.
+
+The last mistake is never revisiting the file. I update rules when I notice repeated friction. If I keep telling Cursor the same thing in prompts, that instruction probably belongs in the rules.
 
 My final advice is to start small. Write a rules file with the stack, structure, coding style, safety notes, and verification commands. Use it for a week. Then update it based on what Cursor still gets wrong.
 
 If you're new to Cursor, also check out [10 Cursor AI Tips I Wish I Knew as a Beginner](/blog/cursor-ai-tips-beginners).
+
+For more on which Cursor features I actually use day to day, see [Cursor Keyboard Shortcuts: The 5 I Actually Use Every Day](/blog/cursor-keyboard-shortcuts) and [Is Cursor AI Worth $20/Month](/blog/is-cursor-ai-worth-it).
