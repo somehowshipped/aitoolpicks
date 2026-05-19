@@ -17,6 +17,8 @@ Cmd+K is good for small, local edits. Rename this variable. Simplify this condit
 
 Cmd+L is better when the problem needs context. If I am trying to understand why a route fails, where a helper is used, or how to structure a feature, I start a conversation. I want Cursor to reason before editing.
 
+Composer is Cursor's multi-file editing mode. Use it when a single change needs to span several files at once. It is the feature that separates Cursor from autocomplete-first tools like Copilot.
+
 The mistake I made early was using chat for everything. That slowed me down. If the edit is obvious and local, Cmd+K is faster.
 
 The opposite mistake is using Cmd+K when I do not understand the problem. That creates random edits. If I cannot explain the change in one sentence, I use chat first.
@@ -97,6 +99,8 @@ Project rules:
 That is enough to help. Cursor now knows what kind of project it is in and what mistakes to avoid.
 
 The key is keeping the rules specific. "Write clean code" does not help much. "Do not create a second API client; use `src/lib/api.ts`" helps a lot.
+
+I have a longer guide on this — [How to Write Cursor Rules That Actually Work](/blog/how-to-write-cursor-rules).
 
 ## 6. Ask Cursor to explain code, not just write it
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import { getPostBySlug, getPostSlugs } from "@/lib/posts";
 
 type BlogPostPageProps = {
@@ -53,6 +54,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     source: post.content,
     options: {
       parseFrontmatter: false,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+      },
     },
   });
 
